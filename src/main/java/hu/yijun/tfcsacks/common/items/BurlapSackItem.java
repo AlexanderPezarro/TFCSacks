@@ -1,7 +1,7 @@
 package hu.yijun.tfcsacks.common.items;
 
+import hu.yijun.tfcsacks.common.capabilities.LimitedContainer;
 import hu.yijun.tfcsacks.common.container.TFCSacksContainerProviders;
-import net.dries007.tfc.common.capabilities.Capabilities;
 import net.dries007.tfc.common.capabilities.DelegateItemHandler;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
@@ -18,6 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -67,7 +68,7 @@ public class BurlapSackItem extends Item {
         return 1;
     }
 
-    static class BurlapSackCapability implements ICapabilityProvider, DelegateItemHandler, IItemHandlerModifiable, EmptyInventory {
+    public static class BurlapSackCapability implements ICapabilityProvider, DelegateItemHandler, LimitedContainer, EmptyInventory {
         private final ItemStack stack;
         private final ItemStackHandler inventory;
 
@@ -81,6 +82,17 @@ public class BurlapSackItem extends Item {
             this.capability = LazyOptional.of(() -> this);
         }
 
+        @Override
+        public int getSlotStackLimit(int slot) {
+            return 16;
+        }
+
+        @Override
+        public void setAndUpdateSlots(int slot) {
+            final ItemStack stack = inventory.getStackInSlot(slot);
+            final CompoundTag tag = stack.getOrCreateTag();
+            tag.put("inventory", inventory.serializeNBT());
+        }
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack)
@@ -96,10 +108,10 @@ public class BurlapSackItem extends Item {
 
         @Override
         public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction direction) {
-            if (cap == Capabilities.ITEM) {
+            if (cap == ForgeCapabilities.ITEM_HANDLER) {
                 final CompoundTag tag = stack.getOrCreateTag();
                 inventory.deserializeNBT(tag.getCompound("inventory"));
-                capability.cast();
+                return capability.cast();
             }
 
             return LazyOptional.empty();
