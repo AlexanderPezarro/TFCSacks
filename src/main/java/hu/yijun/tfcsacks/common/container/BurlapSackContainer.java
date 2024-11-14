@@ -3,12 +3,14 @@ package hu.yijun.tfcsacks.common.container;
 import hu.yijun.tfcsacks.common.capabilities.SackLike;
 import hu.yijun.tfcsacks.common.items.BurlapSackItem;
 import net.dries007.tfc.common.container.CallbackSlot;
-import net.dries007.tfc.common.container.ItemStackContainer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class BurlapSackContainer extends ItemStackContainer {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+public class BurlapSackContainer extends CustomItemStackContainer {
 
     public static BurlapSackContainer create(ItemStack stack, InteractionHand hand, int slot, Inventory playerInv, int windowId)
     {

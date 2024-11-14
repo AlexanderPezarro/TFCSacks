@@ -19,7 +19,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -29,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class BurlapSackItem extends Item {
 
     public static final int SLOTS = 8;
@@ -37,7 +37,6 @@ public class BurlapSackItem extends Item {
         super(properties);
     }
 
-    @ParametersAreNonnullByDefault
     @Override
     public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
 
@@ -46,7 +45,7 @@ public class BurlapSackItem extends Item {
 
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         final ItemStack stack = player.getItemInHand(hand);
         if (!player.isShiftKeyDown() && !level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             TFCSacksContainerProviders.BURLAP_SACK.openScreen(serverPlayer, hand);
@@ -88,7 +87,6 @@ public class BurlapSackItem extends Item {
 
         @Override
         public void setAndUpdateSlots(int slot) {
-//            final ItemStack stack = inventory.getStackInSlot(slot);
             if (slot == 0) {  // only run this once
                 final CompoundTag tag = stack.getOrCreateTag();
                 tag.put("inventory", inventory.serializeNBT());
@@ -96,7 +94,7 @@ public class BurlapSackItem extends Item {
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        public boolean isItemValid(int slot, ItemStack stack) {
             return ItemSizeManager.get(stack).getSize(stack).isEqualOrSmallerThan(Size.SMALL);
         }
 
@@ -106,7 +104,7 @@ public class BurlapSackItem extends Item {
         }
 
         @Override
-        public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction direction) {
+        public @NotNull <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction direction) {
             if (cap == Capabilities.ITEM) {
                 loadCapability();
                 return capability.cast();
@@ -132,8 +130,7 @@ public class BurlapSackItem extends Item {
 
         @Override
         public @NotNull ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            ItemStack result = inventory.insertItem(slot, stack.copy(), simulate);
-            return result;
+            return inventory.insertItem(slot, stack.copy(), simulate);
         }
 
         @Override
