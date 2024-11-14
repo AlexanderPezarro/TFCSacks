@@ -1,7 +1,8 @@
 package hu.yijun.tfcsacks.common.items;
 
-import hu.yijun.tfcsacks.common.capabilities.LimitedContainer;
+import hu.yijun.tfcsacks.common.capabilities.SackLike;
 import hu.yijun.tfcsacks.common.container.TFCSacksContainerProviders;
+import net.dries007.tfc.common.capabilities.Capabilities;
 import net.dries007.tfc.common.capabilities.DelegateItemHandler;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
@@ -47,8 +48,7 @@ public class BurlapSackItem extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         final ItemStack stack = player.getItemInHand(hand);
-        if (!player.isShiftKeyDown() && !level.isClientSide() && player instanceof ServerPlayer serverPlayer)
-        {
+        if (!player.isShiftKeyDown() && !level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             TFCSacksContainerProviders.BURLAP_SACK.openScreen(serverPlayer, hand);
         }
 
@@ -57,25 +57,24 @@ public class BurlapSackItem extends Item {
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt)
-    {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new BurlapSackCapability(stack);
     }
 
     @Override
-    public int getMaxStackSize(ItemStack stack)
-    {
+    public int getMaxStackSize(ItemStack stack) {
         return 1;
     }
 
-    public static class BurlapSackCapability implements ICapabilityProvider, DelegateItemHandler, LimitedContainer, EmptyInventory {
+
+    public static class BurlapSackCapability implements ICapabilityProvider, DelegateItemHandler, SackLike, EmptyInventory {
         private final ItemStack stack;
         private final ItemStackHandler inventory;
 
         private final LazyOptional<BurlapSackCapability> capability;
+        private boolean initialised = false;
 
-        BurlapSackCapability(ItemStack stack)
-        {
+        BurlapSackCapability(ItemStack stack) {
             this.stack = stack;
             this.inventory = new ItemStackHandler(SLOTS);
 
@@ -84,37 +83,62 @@ public class BurlapSackItem extends Item {
 
         @Override
         public int getSlotStackLimit(int slot) {
-            return 16;
+            return 32;
         }
 
         @Override
         public void setAndUpdateSlots(int slot) {
-            final ItemStack stack = inventory.getStackInSlot(slot);
-            final CompoundTag tag = stack.getOrCreateTag();
-            tag.put("inventory", inventory.serializeNBT());
+//            final ItemStack stack = inventory.getStackInSlot(slot);
+            if (slot == 0) {  // only run this once
+                final CompoundTag tag = stack.getOrCreateTag();
+                tag.put("inventory", inventory.serializeNBT());
+            }
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack)
-        {
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             return ItemSizeManager.get(stack).getSize(stack).isEqualOrSmallerThan(Size.SMALL);
         }
 
         @Override
-        public @NotNull IItemHandlerModifiable getItemHandler()
-        {
+        public @NotNull IItemHandlerModifiable getItemHandler() {
             return inventory;
         }
 
         @Override
         public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction direction) {
-            if (cap == ForgeCapabilities.ITEM_HANDLER) {
-                final CompoundTag tag = stack.getOrCreateTag();
-                inventory.deserializeNBT(tag.getCompound("inventory"));
+            if (cap == Capabilities.ITEM) {
+                loadCapability();
                 return capability.cast();
             }
 
             return LazyOptional.empty();
+        }
+
+        private void loadCapability() {
+            if (initialised) {
+                return;
+            }
+            initialised = true;
+
+            final CompoundTag tag = stack.getOrCreateTag();
+            inventory.deserializeNBT(tag.getCompound("inventory"));
+        }
+
+        @Override
+        public void setStackInSlot(int slot, ItemStack stack) {
+            inventory.setStackInSlot(slot, stack);
+        }
+
+        @Override
+        public @NotNull ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            ItemStack result = inventory.insertItem(slot, stack.copy(), simulate);
+            return result;
+        }
+
+        @Override
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+            return inventory.extractItem(slot, amount, simulate);
         }
     }
 }

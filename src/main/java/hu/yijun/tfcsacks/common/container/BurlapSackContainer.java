@@ -1,15 +1,12 @@
 package hu.yijun.tfcsacks.common.container;
 
-import hu.yijun.tfcsacks.common.capabilities.LimitedContainer;
+import hu.yijun.tfcsacks.common.capabilities.SackLike;
+import hu.yijun.tfcsacks.common.items.BurlapSackItem;
 import net.dries007.tfc.common.container.CallbackSlot;
 import net.dries007.tfc.common.container.ItemStackContainer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.items.IItemHandler;
 
 public class BurlapSackContainer extends ItemStackContainer {
 
@@ -18,28 +15,33 @@ public class BurlapSackContainer extends ItemStackContainer {
         return new BurlapSackContainer(stack, hand, slot, playerInv, windowId).init(playerInv);
     }
 
-    private final LimitedContainer limitedContainer;
-
+    private final SackLike sackLike;
 
     private BurlapSackContainer(ItemStack stack, InteractionHand hand, int slot, Inventory playerInv, int windowId) {
         super(TFCSacksContainerTypes.BURLAP_SACK_CONTAINER.get(), windowId, playerInv, stack, hand, slot);
-        Capability<IItemHandler> itemHandlerCapability = CapabilityManager.get(new CapabilityToken<>() {
-        });
-        var itemHandler = stack.getCapability(itemHandlerCapability).orElse(null);
-        limitedContainer = itemHandler instanceof LimitedContainer lc ? lc : null;
+
+        sackLike = SackLike.getInstance(stack);
+    }
+
+    @Override
+    protected boolean moveStack(ItemStack stack, int slotIndex) {
+        return switch (typeOf(slotIndex)) {
+            case MAIN_INVENTORY, HOTBAR -> !moveItemStackTo(stack, 0, BurlapSackItem.SLOTS, false);
+            case CONTAINER -> !moveItemStackTo(stack, containerSlots, slots.size(), false);
+        };
     }
 
     @Override
     protected void addContainerSlots()
     {
-        addSlot(new CallbackSlot(limitedContainer, limitedContainer, 0, 53, 23));
-        addSlot(new CallbackSlot(limitedContainer, limitedContainer, 0, 71, 23));
-        addSlot(new CallbackSlot(limitedContainer, limitedContainer, 0, 89, 23));
-        addSlot(new CallbackSlot(limitedContainer, limitedContainer, 0, 107, 23));
+        addSlot(new CallbackSlot(sackLike, sackLike, 0, 53, 23));
+        addSlot(new CallbackSlot(sackLike, sackLike, 1, 71, 23));
+        addSlot(new CallbackSlot(sackLike, sackLike, 2, 89, 23));
+        addSlot(new CallbackSlot(sackLike, sackLike, 3, 107, 23));
 
-        addSlot(new CallbackSlot(limitedContainer, limitedContainer, 0, 53, 41));
-        addSlot(new CallbackSlot(limitedContainer, limitedContainer, 0, 71, 41));
-        addSlot(new CallbackSlot(limitedContainer, limitedContainer, 0, 89, 41));
-        addSlot(new CallbackSlot(limitedContainer, limitedContainer, 0, 107, 41));
+        addSlot(new CallbackSlot(sackLike, sackLike, 4, 53, 41));
+        addSlot(new CallbackSlot(sackLike, sackLike, 5, 71, 41));
+        addSlot(new CallbackSlot(sackLike, sackLike, 6, 89, 41));
+        addSlot(new CallbackSlot(sackLike, sackLike, 7, 107, 41));
     }
 }
