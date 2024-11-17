@@ -4,6 +4,7 @@ import hu.yijun.tfcsacks.client.screen.BurlapSackInventoryScreen;
 import hu.yijun.tfcsacks.common.container.TFCSacksContainerTypes;
 import hu.yijun.tfcsacks.common.items.TFCSacksItems;
 import hu.yijun.tfcsacks.datagen.TFCSacksItemModels;
+import hu.yijun.tfcsacks.datagen.TFCSacksRecipes;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -77,6 +78,8 @@ public class TFCSacks {
             PackOutput packOutput = generator.getPackOutput();
             ExistingFileHelper fileHelper = event.getExistingFileHelper();
             CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+
+            generator.addProvider(event.includeServer(), new TFCSacksRecipes(packOutput));
 
             generator.addProvider(event.includeClient(), new TFCSacksItemModels(packOutput, fileHelper));
 
