@@ -13,7 +13,7 @@ import static net.dries007.tfc.util.Helpers.resourceLocation;
 
 public class BurlapSackInventoryScreen extends AbstractContainerScreen<BurlapSackContainer> {
 
-    public final ResourceLocation INVENTORY_4x2 = resourceLocation(MOD_ID, "textures/gui/small_inventory.png");
+    public final ResourceLocation INVENTORY_4x2 = resourceLocation(MOD_ID, "textures/gui/eight_inventory.png");
 
     public BurlapSackInventoryScreen(BurlapSackContainer container, Inventory inventory, Component ptitle) {
         super(container, inventory, ptitle);

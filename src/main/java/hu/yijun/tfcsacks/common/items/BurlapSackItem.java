@@ -8,6 +8,9 @@ import net.dries007.tfc.common.capabilities.InventoryItemHandler;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.recipes.inventory.EmptyInventory;
+import net.dries007.tfc.config.TFCConfig;
+import net.dries007.tfc.util.Helpers;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,6 +19,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -28,8 +32,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Optional;
 
 @ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class BurlapSackItem extends Item {
 
     public static final int SLOTS = 8;
@@ -65,6 +71,16 @@ public class BurlapSackItem extends Item {
         return 1;
     }
 
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+        if (TFCConfig.CLIENT.displayItemContentsAsImages.get()) {
+            SackLike sack = SackLike.getInstance(stack);
+            if (sack != null) {
+                return Helpers.getTooltipImage(sack, 4, 2, 0, SLOTS-1);
+            }
+        }
+        return super.getTooltipImage(stack);
+    }
 
     public static class BurlapSackCapability implements ICapabilityProvider, DelegateItemHandler, SackLike, EmptyInventory {
         private final ItemStack stack;
