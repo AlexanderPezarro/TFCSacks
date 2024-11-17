@@ -40,7 +40,6 @@ public class BurlapSackItem extends Item {
 
     @Override
     public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
-
         return super.overrideStackedOnOther(stack, slot, action, player);
     }
 

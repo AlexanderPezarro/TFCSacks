@@ -14,11 +14,9 @@ import static net.dries007.tfc.util.Helpers.resourceLocation;
 public class BurlapSackInventoryScreen extends AbstractContainerScreen<BurlapSackContainer> {
 
     public final ResourceLocation INVENTORY_4x2 = resourceLocation(MOD_ID, "textures/gui/small_inventory.png");
-//    private final Inventory playerInventory;
 
     public BurlapSackInventoryScreen(BurlapSackContainer container, Inventory inventory, Component ptitle) {
         super(container, inventory, ptitle);
-//        this.playerInventory = inventory;
     }
 
     @Override
@@ -36,13 +34,4 @@ public class BurlapSackInventoryScreen extends AbstractContainerScreen<BurlapSac
     protected void drawDefaultBackground(GuiGraphics graphics) {
         graphics.blit(INVENTORY_4x2, leftPos, topPos, 0, 0, 0, imageWidth, imageHeight, 256, 256);
     }
-
-//    protected void drawCenteredLine(GuiGraphics graphics, MutableComponent text, int y) {
-//        final int x = (imageWidth - font.width(text)) / 2;
-//        graphics.drawString(font, text, x, y, 0x404040, false);
-//    }
-//
-//    public Inventory getPlayerInventory() {
-//        return playerInventory;
-//    }
 }
