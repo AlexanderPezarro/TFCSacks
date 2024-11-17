@@ -4,6 +4,7 @@ import hu.yijun.tfcsacks.common.capabilities.SackLike;
 import hu.yijun.tfcsacks.common.container.TFCSacksContainerProviders;
 import net.dries007.tfc.common.capabilities.Capabilities;
 import net.dries007.tfc.common.capabilities.DelegateItemHandler;
+import net.dries007.tfc.common.capabilities.InventoryItemHandler;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.recipes.inventory.EmptyInventory;
@@ -75,7 +76,7 @@ public class BurlapSackItem extends Item {
 
         BurlapSackCapability(ItemStack stack) {
             this.stack = stack;
-            this.inventory = new ItemStackHandler(SLOTS);
+            this.inventory = new InventoryItemHandler(this, SLOTS);
 
             this.capability = LazyOptional.of(() -> this);
         }
