@@ -5,8 +5,10 @@ import hu.yijun.tfcsacks.common.container.TFCSacksContainerProviders;
 import net.dries007.tfc.common.capabilities.Capabilities;
 import net.dries007.tfc.common.capabilities.DelegateItemHandler;
 import net.dries007.tfc.common.capabilities.InventoryItemHandler;
+import net.dries007.tfc.common.capabilities.size.IItemSize;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
+import net.dries007.tfc.common.capabilities.size.Weight;
 import net.dries007.tfc.common.recipes.inventory.EmptyInventory;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Helpers;
@@ -36,7 +38,7 @@ import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class BurlapSackItem extends Item {
+public class BurlapSackItem extends Item implements IItemSize {
 
     public static final int SLOTS = 8;
 
@@ -80,6 +82,16 @@ public class BurlapSackItem extends Item {
             }
         }
         return super.getTooltipImage(stack);
+    }
+
+    @Override
+    public Size getSize(ItemStack stack) {
+        return Size.LARGE;
+    }
+
+    @Override
+    public Weight getWeight(ItemStack stack) {
+        return Weight.HEAVY;
     }
 
     public static class BurlapSackCapability implements ICapabilityProvider, DelegateItemHandler, SackLike, EmptyInventory {
