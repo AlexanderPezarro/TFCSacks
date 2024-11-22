@@ -47,7 +47,7 @@ public class CustomItemStackContainer extends ItemStackContainer {
         for (int k = 0; k < 2; k++) {
             for (int i = from; i >= 0 && i < slots.size() && currentStack.getCount() < currentStack.getMaxStackSize(); i += direction) {
 
-                if (i == slotIndex) continue;
+                if (i == itemIndex) continue;
 
                 Slot invSlot = slots.get(i);
 

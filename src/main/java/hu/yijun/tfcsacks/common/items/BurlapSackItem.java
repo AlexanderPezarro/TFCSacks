@@ -115,10 +115,8 @@ public class BurlapSackItem extends Item implements IItemSize {
 
         @Override
         public void setAndUpdateSlots(int slot) {
-            if (slot == 0) {  // only run this once
-                final CompoundTag tag = stack.getOrCreateTag();
-                tag.put("inventory", inventory.serializeNBT());
-            }
+            final CompoundTag tag = stack.getOrCreateTag();
+            tag.put("inventory", inventory.serializeNBT());
         }
 
         @Override
