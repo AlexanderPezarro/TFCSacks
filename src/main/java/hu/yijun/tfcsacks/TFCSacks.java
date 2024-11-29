@@ -1,12 +1,12 @@
 package hu.yijun.tfcsacks;
 
 import hu.yijun.tfcsacks.client.screen.BurlapSackInventoryScreen;
+import hu.yijun.tfcsacks.client.screen.ToolSackInventoryScreen;
 import hu.yijun.tfcsacks.common.container.TFCSacksContainerTypes;
 import hu.yijun.tfcsacks.common.items.TFCSacksItems;
 import hu.yijun.tfcsacks.datagen.TFCSacksItemModels;
 import hu.yijun.tfcsacks.datagen.TFCSacksRecipes;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -22,8 +22,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import java.util.concurrent.CompletableFuture;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(TFCSacks.MOD_ID)
@@ -50,6 +48,7 @@ public class TFCSacks {
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if(event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(TFCSacksItems.BURLAP_SACK);
+            event.accept(TFCSacksItems.TOOL_SACK);
         }
     }
 
@@ -66,6 +65,7 @@ public class TFCSacks {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             MenuScreens.register(TFCSacksContainerTypes.BURLAP_SACK_CONTAINER.get(), BurlapSackInventoryScreen::new);
+            MenuScreens.register(TFCSacksContainerTypes.TOOL_SACK_CONTAINER.get(), ToolSackInventoryScreen::new);
         }
     }
 
@@ -77,7 +77,7 @@ public class TFCSacks {
             DataGenerator generator = event.getGenerator();
             PackOutput packOutput = generator.getPackOutput();
             ExistingFileHelper fileHelper = event.getExistingFileHelper();
-            CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+            //CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
             generator.addProvider(event.includeServer(), new TFCSacksRecipes(packOutput));
 

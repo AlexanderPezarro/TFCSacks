@@ -13,6 +13,7 @@ public final class TFCSacksContainerTypes {
     public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MOD_ID);
 
     public static final RegistryObject<MenuType<BurlapSackContainer>> BURLAP_SACK_CONTAINER = registerItem("burlap_sack_container", BurlapSackContainer::create);
+    public static final RegistryObject<MenuType<ToolSackContainer>> TOOL_SACK_CONTAINER = registerItem("tool_pack_container", ToolSackContainer::create);
 
     private static <C extends ItemStackContainer> RegistryObject<MenuType<C>> registerItem(String name, ItemStackContainer.Factory<C> factory)
     {

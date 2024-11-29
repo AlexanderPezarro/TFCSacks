@@ -10,6 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import static hu.yijun.tfcsacks.TFCSacks.MOD_ID;
 import static hu.yijun.tfcsacks.common.items.TFCSacksItems.BURLAP_SACK;
+import static hu.yijun.tfcsacks.common.items.TFCSacksItems.TOOL_SACK;
 
 public class TFCSacksItemModels extends ItemModelProvider {
     public TFCSacksItemModels(PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -19,6 +20,7 @@ public class TFCSacksItemModels extends ItemModelProvider {
     @Override
     protected void registerModels() {
         simpleItem(BURLAP_SACK);
+        simpleItem(TOOL_SACK);
     }
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> itemObject) {

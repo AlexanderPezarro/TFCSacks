@@ -14,6 +14,8 @@ public final class TFCSacksItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
     public static final RegistryObject<Item> BURLAP_SACK = register("burlap_sack", () -> new BurlapSackItem(new Item.Properties()));
+    public static final RegistryObject<Item> TOOL_SACK = register("tool_sack", () -> new ToolSackItem(new Item.Properties()));
+
 
     private static <T extends Item> RegistryObject<T> register(String name, Supplier<T> item)
     {
